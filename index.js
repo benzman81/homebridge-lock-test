@@ -69,11 +69,11 @@ SomeLockAccessory.prototype.setState = function(unlockType, homeKitState, callba
   var myLockActionCallback = function() {
     // update lock service A
     this.lockServiceA.getCharacteristic(Characteristic.LockTargetState).updateValue(newHomeKitStateTarget, undefined, null);
-    this.lockServiceA.getCharacteristic(Characteristic.LockCurrentState).updateValue(newHomeKitStateCurrent, undefined, null);
+    this.lockServiceA.getCharacteristic(Characteristic.LockCurrentState).updateValue(newHomeKitState, undefined, null);
 
     // update lock service B
     this.lockServiceB.getCharacteristic(Characteristic.LockTargetState).updateValue(newHomeKitStateTarget, undefined, "myContextString");
-    this.lockServiceB.getCharacteristic(Characteristic.LockCurrentState).updateValue(newHomeKitStateCurrent, undefined, "myContextString");
+    this.lockServiceB.getCharacteristic(Characteristic.LockCurrentState).updateValue(newHomeKitState, undefined, "myContextString");
 
     callback(null);
   }.bind(this);

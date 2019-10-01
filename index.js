@@ -28,6 +28,7 @@ function SomeLockAccessory(log) {
 
   this.lockServiceALocked = true;
   this.lockServiceBLocked = true;
+  this.lockServiceCLocked = true;
 
   this.informationService = new Service.AccessoryInformation();
   this.informationService.setCharacteristic(Characteristic.Manufacturer, "SomeLock.io").setCharacteristic(Characteristic.Model, "Some Lock").setCharacteristic(Characteristic.SerialNumber, "SomeLock.io-Id " + this.id);
@@ -39,6 +40,10 @@ function SomeLockAccessory(log) {
   this.lockServiceB = new Service.LockMechanism(this.name + " B", this.name + " B");
   this.lockServiceB.getCharacteristic(Characteristic.LockCurrentState).on('get', this.getStateB.bind(this));
   this.lockServiceB.getCharacteristic(Characteristic.LockTargetState).on('get', this.getStateB.bind(this)).on('set', this.setState.bind(this, "B"));
+
+  this.lockServiceC = new Service.LockMechanism(this.name + " C", this.name + " C");
+  this.lockServiceC.getCharacteristic(Characteristic.LockCurrentState).on('get', this.getStateC.bind(this));
+  this.lockServiceC.getCharacteristic(Characteristic.LockTargetState).on('get', this.getStateC.bind(this)).on('set', this.setState.bind(this, "C"));
 };
 
 SomeLockAccessory.prototype.getStateA = function(callback) {
@@ -49,12 +54,19 @@ SomeLockAccessory.prototype.getStateB = function(callback) {
   callback(null, this.lockServiceBLocked ? Characteristic.LockCurrentState.SECURED : Characteristic.LockCurrentState.UNSECURED);
 };
 
+SomeLockAccessory.prototype.getStateC = function(callback) {
+  callback(null, this.lockServiceCLocked ? Characteristic.LockCurrentState.SECURED : Characteristic.LockCurrentState.UNSECURED);
+};
+
 SomeLockAccessory.prototype.execLockAction = function(unlockType, doLock, callback) {
   if (unlockType === "A") {
     this.lockServiceALocked = doLock;
   }
-  else {
+  else if (unlockType === "B") {
     this.lockServiceBLocked = doLock;
+  }
+  else {
+    this.lockServiceCLocked = doLock;
   }
   callback();
   this.log("execLockAction is execute for unlockType '%s' and doLock '%s'", unlockType, doLock);
@@ -65,6 +77,13 @@ SomeLockAccessory.prototype.setState = function(unlockType, homeKitState, callba
   var newHomeKitState = doLock ? Characteristic.LockCurrentState.SECURED : Characteristic.LockCurrentState.UNSECURED;
   var newHomeKitStateTarget = doLock ? Characteristic.LockTargetState.SECURED : Characteristic.LockTargetState.UNSECURED;
   this.log("S E T S T A T E: unlockType = %s, doLock = %s,homeKitState = %s", unlockType, doLock, homeKitState);
+
+  if (unlockType === "C") {
+    this.lockServiceC.getCharacteristic(Characteristic.LockTargetState).updateValue(newHomeKitStateTarget, undefined, null);
+    this.lockServiceC.getCharacteristic(Characteristic.LockCurrentState).updateValue(newHomeKitState, undefined, null);
+    callback(null);
+    return;
+  }
 
   var myLockActionCallback = function() {
     // update lock service A

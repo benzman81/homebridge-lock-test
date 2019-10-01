@@ -34,11 +34,11 @@ function SomeLockAccessory(log) {
 
   this.lockServiceA = new Service.LockMechanism(this.name + " A", this.name + " A");
   this.lockServiceA.getCharacteristic(Characteristic.LockCurrentState).on('get', this.getStateA.bind(this));
-  this.lockServiceA.getCharacteristic(Characteristic.LockTargetState).on('get', this.getState.bind(this)).on('set', this.setState.bind(this, "A"));
+  this.lockServiceA.getCharacteristic(Characteristic.LockTargetState).on('get', this.getStateA.bind(this)).on('set', this.setState.bind(this, "A"));
 
   this.lockServiceB = new Service.LockMechanism(this.name + " B", this.name + " B");
   this.lockServiceB.getCharacteristic(Characteristic.LockCurrentState).on('get', this.getStateB.bind(this));
-  this.lockServiceB.getCharacteristic(Characteristic.LockTargetState).on('get', this.getState.bind(this)).on('set', this.setState.bind(this, "B"));
+  this.lockServiceB.getCharacteristic(Characteristic.LockTargetState).on('get', this.getStateB.bind(this)).on('set', this.setState.bind(this, "B"));
 };
 
 SomeLockAccessory.prototype.getStateA = function(callback) {

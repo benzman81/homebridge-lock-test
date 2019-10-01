@@ -76,7 +76,7 @@ SomeLockAccessory.prototype.setState = function(unlockType, homeKitState, callba
     this.lockServiceB.getCharacteristic(Characteristic.LockCurrentState).updateValue(newHomeKitStateCurrent, undefined, "myContextString");
 
     callback(null);
-  }
+  }.bind(this);
 
   if (context === "myContextString") {
     // only call callback as characteristic already has corret state

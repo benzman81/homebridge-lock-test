@@ -108,5 +108,5 @@ SomeLockAccessory.prototype.setState = function(unlockType, homeKitState, callba
 };
 
 SomeLockAccessory.prototype.getServices = function() {
-  return [ this.lockServiceA, this.lockServiceB, this.informationService ];
+  return [ this.lockServiceA, this.lockServiceB, this.lockServiceC, this.informationService ];
 };

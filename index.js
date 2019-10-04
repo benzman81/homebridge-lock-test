@@ -17,8 +17,8 @@ SomeLockBridgePlatform2.prototype = {
 
   accessories : function(callback) {
     var accessories = [];
-    accessories.push(new SomeLockAccessory(this.log));
-    accessories.push(new SomeSwitchAccessory(this.log));
+    accessories.push(new SomeLockAccessory2(this.log));
+    accessories.push(new SomeSwitchAccessory2(this.log));
     callback(accessories);
   }
 }

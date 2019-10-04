@@ -125,13 +125,13 @@ function SomeSwitchAccessory2(log) {
   this.informationService = new Service.AccessoryInformation();
   this.informationService.setCharacteristic(Characteristic.Manufacturer, "SomeSwitch.io").setCharacteristic(Characteristic.Model, "SomeSwitch.io Switch").setCharacteristic(Characteristic.SerialNumber, "SomeSwitch.io-Id " + this.id);
 
-  this.switchServiceA = new Service.Switch(this.name + " A");
+  this.switchServiceA = new Service.Switch(this.name + " A", this.name + " A");
   this.switchServiceA.getCharacteristic(Characteristic.On).on('get', this.getStateA.bind(this)).on('set', this.setState.bind(this, "A"));
 
-  this.switchServiceB = new Service.Switch(this.name + " B");
+  this.switchServiceB = new Service.Switch(this.name + " B", this.name + " B");
   this.switchServiceB.getCharacteristic(Characteristic.On).on('get', this.getStateB.bind(this)).on('set', this.setState.bind(this, "B"));
 
-  this.switchServiceC = new Service.Switch(this.name + " C");
+  this.switchServiceC = new Service.Switch(this.name + " C", this.name + " C");
   this.switchServiceC.getCharacteristic(Characteristic.On).on('get', this.getStateC.bind(this)).on('set', this.setState.bind(this, "C"));
 }
 

@@ -191,5 +191,5 @@ SomeSwitchAccessory.prototype.setState = function(switchType, powerOn, callback)
 };
 
 SomeSwitchAccessory.prototype.getServices = function() {
-  return [ this.switchService, this.informationService ];
+  return [ this.switchServiceA, this.switchServiceB, this.switchServiceC, this.informationService ];
 };

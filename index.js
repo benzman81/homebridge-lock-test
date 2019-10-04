@@ -137,17 +137,17 @@ function SomeSwitchAccessory2(log) {
 
 SomeSwitchAccessory2.prototype.getStateA = function(callback) {
   this.log("Getting current state for A '%s'...", this.id);
-  callback(null, switchAOn);
+  callback(null, this.switchAOn);
 };
 
 SomeSwitchAccessory2.prototype.getStateB = function(callback) {
   this.log("Getting current state for B '%s'...", this.id);
-  callback(null, switchBOn);
+  callback(null, this.switchBOn);
 };
 
 SomeSwitchAccessory2.prototype.getStateC = function(callback) {
   this.log("Getting current state for C '%s'...", this.id);
-  callback(null, switchCOn);
+  callback(null, this.switchCOn);
 };
 
 SomeSwitchAccessory2.prototype.execSwitchAction = function(switchType, powerOn, callback) {

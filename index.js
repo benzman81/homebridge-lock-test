@@ -4,16 +4,16 @@ module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
 
-  homebridge.registerPlatform("homebridge-lock-test", "SomeLockBridge", SomeLockBridgePlatform);
-  homebridge.registerAccessory("homebridge-lock-test", "SomeLock", SomeLockAccessory);
-  homebridge.registerAccessory("homebridge-lock-test", "SomeSwitch", SomeSwitchAccessory);
+  homebridge.registerPlatform("homebridge-lock-test", "SomeLockBridge2", SomeLockBridgePlatform2);
+  homebridge.registerAccessory("homebridge-lock-test", "SomeLock2", SomeLockAccessory2);
+  homebridge.registerAccessory("homebridge-lock-test", "SomeSwitch2", SomeSwitchAccessory2);
 };
 
-function SomeLockBridgePlatform(log, config) {
+function SomeLockBridgePlatform2(log, config) {
   this.log = log;
 }
 
-SomeLockBridgePlatform.prototype = {
+SomeLockBridgePlatform2.prototype = {
 
   accessories : function(callback) {
     var accessories = [];
@@ -23,9 +23,9 @@ SomeLockBridgePlatform.prototype = {
   }
 }
 
-function SomeLockAccessory(log) {
+function SomeLockAccessory2(log) {
   this.log = log;
-  this.id = "someId";
+  this.id = "someId2";
   this.name = "someLockName";
 
   this.lockServiceALocked = true;
@@ -48,19 +48,19 @@ function SomeLockAccessory(log) {
   this.lockServiceC.getCharacteristic(Characteristic.LockTargetState).on('get', this.getStateC.bind(this)).on('set', this.setState.bind(this, "C"));
 };
 
-SomeLockAccessory.prototype.getStateA = function(callback) {
+SomeLockAccessory2.prototype.getStateA = function(callback) {
   callback(null, this.lockServiceALocked ? Characteristic.LockCurrentState.SECURED : Characteristic.LockCurrentState.UNSECURED);
 };
 
-SomeLockAccessory.prototype.getStateB = function(callback) {
+SomeLockAccessory2.prototype.getStateB = function(callback) {
   callback(null, this.lockServiceBLocked ? Characteristic.LockCurrentState.SECURED : Characteristic.LockCurrentState.UNSECURED);
 };
 
-SomeLockAccessory.prototype.getStateC = function(callback) {
+SomeLockAccessory2.prototype.getStateC = function(callback) {
   callback(null, this.lockServiceCLocked ? Characteristic.LockCurrentState.SECURED : Characteristic.LockCurrentState.UNSECURED);
 };
 
-SomeLockAccessory.prototype.execLockAction = function(unlockType, doLock, callback) {
+SomeLockAccessory2.prototype.execLockAction = function(unlockType, doLock, callback) {
   if (unlockType === "A") {
     this.lockServiceALocked = doLock;
   }
@@ -74,7 +74,7 @@ SomeLockAccessory.prototype.execLockAction = function(unlockType, doLock, callba
   this.log("execLockAction is execute for unlockType '%s' and doLock '%s'", unlockType, doLock);
 }
 
-SomeLockAccessory.prototype.setState = function(unlockType, homeKitState, callback, context) {
+SomeLockAccessory2.prototype.setState = function(unlockType, homeKitState, callback, context) {
   var doLock = homeKitState == Characteristic.LockTargetState.SECURED;
   var newHomeKitState = doLock ? Characteristic.LockCurrentState.SECURED : Characteristic.LockCurrentState.UNSECURED;
   var newHomeKitStateTarget = doLock ? Characteristic.LockTargetState.SECURED : Characteristic.LockTargetState.UNSECURED;
@@ -109,13 +109,13 @@ SomeLockAccessory.prototype.setState = function(unlockType, homeKitState, callba
 
 };
 
-SomeLockAccessory.prototype.getServices = function() {
+SomeLockAccessory2.prototype.getServices = function() {
   return [ this.lockServiceA, this.lockServiceB, this.lockServiceC, this.informationService ];
 };
 
-function SomeSwitchAccessory(log) {
+function SomeSwitchAccessory2(log) {
   this.log = log;
-  this.id = "someSwitchId";
+  this.id = "someSwitchId2";
   this.name = "someSwitchName";
 
   this.switchAOn = false;
@@ -135,22 +135,22 @@ function SomeSwitchAccessory(log) {
   this.switchServiceC.getCharacteristic(Characteristic.On).on('get', this.getStateC.bind(this)).on('set', this.setState.bind(this, "C"));
 }
 
-SomeSwitchAccessory.prototype.getStateA = function(callback) {
+SomeSwitchAccessory2.prototype.getStateA = function(callback) {
   this.log("Getting current state for A '%s'...", this.id);
   callback(null, switchAOn);
 };
 
-SomeSwitchAccessory.prototype.getStateB = function(callback) {
+SomeSwitchAccessory2.prototype.getStateB = function(callback) {
   this.log("Getting current state for B '%s'...", this.id);
   callback(null, switchBOn);
 };
 
-SomeSwitchAccessory.prototype.getStateC = function(callback) {
+SomeSwitchAccessory2.prototype.getStateC = function(callback) {
   this.log("Getting current state for C '%s'...", this.id);
   callback(null, switchCOn);
 };
 
-SomeSwitchAccessory.prototype.execSwitchAction = function(switchType, powerOn, callback) {
+SomeSwitchAccessory2.prototype.execSwitchAction = function(switchType, powerOn, callback) {
   if (switchType === "A") {
     this.switchAOn = powerOn;
   }
@@ -164,7 +164,7 @@ SomeSwitchAccessory.prototype.execSwitchAction = function(switchType, powerOn, c
   this.log("execSwitchAction is execute for switchType '%s' and powerOn '%s'", switchType, powerOn);
 }
 
-SomeSwitchAccessory.prototype.setState = function(switchType, powerOn, callback) {
+SomeSwitchAccessory2.prototype.setState = function(switchType, powerOn, callback) {
   this.log("Switch state for '%s' '%s' to '%s'...", this.id, switchType, powerOn);
 
   if (switchType === "C") {
@@ -190,6 +190,6 @@ SomeSwitchAccessory.prototype.setState = function(switchType, powerOn, callback)
   }
 };
 
-SomeSwitchAccessory.prototype.getServices = function() {
+SomeSwitchAccessory2.prototype.getServices = function() {
   return [ this.switchServiceA, this.switchServiceB, this.switchServiceC, this.informationService ];
 };

@@ -6,6 +6,7 @@ module.exports = function(homebridge) {
 
   homebridge.registerPlatform("homebridge-lock-test", "SomeLockBridge", SomeLockBridgePlatform);
   homebridge.registerAccessory("homebridge-lock-test", "SomeLock", SomeLockAccessory);
+  homebridge.registerAccessory("homebridge-lock-test", "SomeSwitch", SomeSwitchAccessory);
 };
 
 function SomeLockBridgePlatform(log, config) {
@@ -17,6 +18,7 @@ SomeLockBridgePlatform.prototype = {
   accessories : function(callback) {
     var accessories = [];
     accessories.push(new SomeLockAccessory(this.log));
+    accessories.push(new SomeSwitchAccessory(this.log));
     callback(accessories);
   }
 }
@@ -109,4 +111,85 @@ SomeLockAccessory.prototype.setState = function(unlockType, homeKitState, callba
 
 SomeLockAccessory.prototype.getServices = function() {
   return [ this.lockServiceA, this.lockServiceB, this.lockServiceC, this.informationService ];
+};
+
+function SomeSwitchAccessory(log) {
+  this.log = log;
+  this.id = "someSwitchId";
+  this.name = "someSwitchName";
+
+  this.switchAOn = false;
+  this.switchBOn = false;
+  this.switchCOn = false;
+
+  this.informationService = new Service.AccessoryInformation();
+  this.informationService.setCharacteristic(Characteristic.Manufacturer, "SomeSwitch.io").setCharacteristic(Characteristic.Model, "SomeSwitch.io Switch").setCharacteristic(Characteristic.SerialNumber, "SomeSwitch.io-Id " + this.id);
+
+  this.switchServiceA = new Service.Switch(this.name);
+  this.switchServiceA.getCharacteristic(Characteristic.On).on('get', this.getStateA.bind(this)).on('set', this.setState.bind(this, "A"));
+
+  this.switchServiceB = new Service.Switch(this.name);
+  this.switchServiceB.getCharacteristic(Characteristic.On).on('get', this.getStateB.bind(this)).on('set', this.setState.bind(this, "B"));
+
+  this.switchServiceC = new Service.Switch(this.name);
+  this.switchServiceC.getCharacteristic(Characteristic.On).on('get', this.getStateC.bind(this)).on('set', this.setState.bind(this, "C"));
+}
+
+SomeSwitchAccessory.prototype.getStateA = function(callback) {
+  this.log("Getting current state for A '%s'...", this.id);
+  callback(null, switchAOn);
+};
+
+SomeSwitchAccessory.prototype.getStateB = function(callback) {
+  this.log("Getting current state for B '%s'...", this.id);
+  callback(null, switchBOn);
+};
+
+SomeSwitchAccessory.prototype.getStateC = function(callback) {
+  this.log("Getting current state for C '%s'...", this.id);
+  callback(null, switchCOn);
+};
+
+SomeSwitchAccessory.prototype.execSwitchAction = function(switchType, powerOn, callback) {
+  if (switchType === "A") {
+    this.switchAOn = powerOn;
+  }
+  else if (switchType === "B") {
+    this.switchBOn = powerOn;
+  }
+  else {
+    this.switchCOn = powerOn;
+  }
+  callback();
+  this.log("execSwitchAction is execute for switchType '%s' and powerOn '%s'", switchType, powerOn);
+}
+
+SomeSwitchAccessory.prototype.setState = function(switchType, powerOn, callback) {
+  this.log("Switch state for '%s' '%s' to '%s'...", this.id, switchType, powerOn);
+
+  if (switchType === "C") {
+    callback(null);
+    return;
+  }
+  var mySwitchActionCallback = function() {
+    // update lock service A
+    this.switchServiceA.getCharacteristic(Characteristic.On).updateValue(powerOn, undefined, null);
+
+    // update lock service B
+    this.switchServiceB.getCharacteristic(Characteristic.On).updateValue(powerOn, undefined, "myContextString");
+
+    callback(null);
+  }.bind(this);
+
+  if (context === "myContextString") {
+    // only call callback as characteristic already has corret state
+    callback(null);
+  }
+  else {
+    this.execSwitchAction(switchType, powerOn, mySwitchActionCallback);
+  }
+};
+
+SomeSwitchAccessory.prototype.getServices = function() {
+  return [ this.switchService, this.informationService ];
 };

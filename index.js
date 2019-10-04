@@ -164,7 +164,7 @@ SomeSwitchAccessory2.prototype.execSwitchAction = function(switchType, powerOn, 
   this.log("execSwitchAction is execute for switchType '%s' and powerOn '%s'", switchType, powerOn);
 }
 
-SomeSwitchAccessory2.prototype.setState = function(switchType, powerOn, callback) {
+SomeSwitchAccessory2.prototype.setState = function(switchType, powerOn, callback, context) {
   this.log("Switch state for '%s' '%s' to '%s'...", this.id, switchType, powerOn);
 
   if (switchType === "C") {
